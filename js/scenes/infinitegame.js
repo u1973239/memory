@@ -13,9 +13,10 @@ class GameScene extends Phaser.Scene {
 		this.firstClick = null;
 		this.score = 100;
 		this.correct = 0;
-		this.temps = 700;
-		this.dificultatlvl = 20;
+		this.temps = 5000;
+		this.dificultatlvl = 10;
 		this.arraycards = [];
+        this.puntuacioFinal = 0;
     }
 
     preload (){	
@@ -29,22 +30,6 @@ class GameScene extends Phaser.Scene {
 	}
 	
     create (){
-		
-		switch (options_data.dificulty){
-			case 'easy':
-				this.temps = 1700;
-				dificultatlvl = 10;
-				break;
-			case 'normal':
-				this.temps = 700;
-				dificultatlvl = 20;
-				break;
-			case 'hard':
-				this.temps = 300;
-				dificultatlvl = 30;
-				break;
-		
-		}
 
 		this.arraycards = ['cb','co','sb','so','tb','to'];
 		this.cards = options_data.cards;
@@ -97,30 +82,50 @@ class GameScene extends Phaser.Scene {
 			});
 		}
 
-		let i = 0;
+		i= 0;
 		this.cards.children.iterate((card)=>{
 			card.card_id = arraycards[i];
 			i++;
-			card.setInteractive();
 			card.on('pointerup', () => {
 				card.disableBody(true,true);
 				if (this.firstClick){
 					if (this.firstClick.card_id !== card.card_id){
 						this.score -= this.dificultatlvl;
+						card.disableBody(true,true);
+						var aux = this.firstClick;
 						setTimeout(()=>{
-							this.firstClick.enableBody(false, 0, 0, true, true);
+							aux.enableBody(false, 0, 0, true, true);
 							card.enableBody(false, 0, 0, true, true);
 						},1000);
-						if (this.score <= 0){
-							alert("Game Over");
-							loadpage("../");
-						}
+                    if (this.score <= 0){ //Si perdem
+                        alert("Game Over"); 
+                        //Guardar cada patida quan perdem
+                        let a_partides = [];
+                        let n_partides = 0;
+                        if(localStorage.partides){
+                            a_partides = JSON.parse(localStorage.partides);
+                            if(!Array.isArray(a_partides)) a_partides = [];
+                            var lastElement = a_partides[a_partides.length - 1];
+                            n_partides = lastElement.num_partida+1;
+                        }
+                        let partida = {
+                            num_partida: n_partides,
+                            puntuacio: this.puntuacioFinal,
+                            dificultat: this.dificultatlvl
+                        }
+                        a_partides.push(partida);
+                        localStorage.partides = JSON.stringify(a_partides);
+                        loadpage("../index.html");
+                    }
+                        this.firstClick = null;
 					}
 					else{
 						this.correct++;
 						if (this.correct >= options_data.cards){
+                            this.dificultatlvl += 10;
+							this.puntuacioFinal += this.score;
 							alert("You Win with " + this.score + " points.");
-							loadpage("../");
+							this.create();
 						}
 					}
 					this.firstClick = null;
