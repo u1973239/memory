@@ -3,15 +3,21 @@
 	<head>
 		<link rel="stylesheet" href="../styles/main.css">
 		<script src="../js/loader.js"></script>
-		<title> Ranking </title>
+		<title> My first game - Ranquing </title>
 	</head>
 	<body>
-		<div id="game_id">
-			<p class="menu-object" id="title">Ranking Infinite Game Mode</p>
-			
+		<div id="saves_id">
+			<p class="menu-object" id="title">Ranking</p>
+			<div v-for="(save, indx) in saves2">
+				<p class="menu-object"> 
+					NUMERO DE PARTIDA: {{save.idpartida}},
+					Jocs: {{save.joc}},
+				</p>
+			</div>
 		</div>
 		<a class="menu-object" href="../">GoToMenu</a>
 	</body>
 	<script src="https://cdn.jsdelivr.net/npm/vue@2.6.14"></script>
-	<script src="../js/game_controller.js"></script>
+	<script src="../js/ranking.js"></script>
 </html>
+
