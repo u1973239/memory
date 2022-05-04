@@ -2,20 +2,20 @@ var load_obj = function(){
 	var vue_instance = new Vue({
 		el: "#saves_id",
 		data: {
-			saves: []
+			saves2: []
 		},
 		created: function(){
-			let a_partides = [];
-			if(localStorage.partides){
-				a_partides = JSON.parse(localStorage.partides);
-				if(!Array.isArray(a_partides)) a_partides = [];
+			let arrayPartidesTotals = [];
+			if(sessionStorage.partides2){
+				arrayPartidesTotals = JSON.parse(sessionStorage.partides2);
+				if(!Array.isArray(arrayPartidesTotals)) arrayPartidesTotals = [];
 			}
-			this.saves2 = a_partides;
+			this.saves2 = arrayPartidesTotals;
 		},
 		methods: { 
 			load: function(i){
-				sessionStorage.idPartida = i;
-				loadpage("../html/index.html");
+				sessionStorage.idPartida2 = i;
+				loadpage("../html/game.html");
 			}			
 		}
 	});

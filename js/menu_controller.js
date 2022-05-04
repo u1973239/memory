@@ -14,6 +14,10 @@ function phaser_infinite_game(){
 	loadpage("./html/phaserinfinitegame.html");
 }
 
+function ranking(){
+	loadpage("./html/Ranking.html");
+}
+
 function exit (){
 	if (name != ""){
 		alert("Leaving " + name + "'s game");

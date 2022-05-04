@@ -13,8 +13,8 @@ class GameScene extends Phaser.Scene {
 		this.firstClick = null;
 		this.score = 100;
 		this.correct = 0;
-		this.temps = 700;
-		this.dificultatlvl = 20;
+		this.temps = 1300; //dificultat normal per defecte
+		this.dificultatlvl = 20; //dificultat normal per defecte
 		this.arraycards = [];
     }
 
@@ -29,33 +29,33 @@ class GameScene extends Phaser.Scene {
 	}
 	
     create (){
-		
+
 		switch (options_data.dificulty){
 			case 'easy':
-				this.temps = 1700;
-				dificultatlvl = 10;
+				this.temps = 2000;
+				this.dificultatlvl = 10;
 				break;
 			case 'normal':
-				this.temps = 700;
-				dificultatlvl = 20;
+				this.temps = 1300;
+				this.dificultatlvl = 20;
 				break;
 			case 'hard':
-				this.temps = 300;
-				dificultatlvl = 30;
+				this.temps = 700;
+				this.dificultatlvl = 30;
 				break;
 		
 		}
 
 		this.arraycards = ['cb','co','sb','so','tb','to'];
 		this.cards = options_data.cards;
-		arraycards = arraycards.slice(); //Es fa una copia
-		arraycards.sort(function(){return Math.random() - 0.5}); // Array aleatòria
-		arraycards = arraycards.slice(0, this.cards); // S'agafen els primers ncards 
-		arraycards = arraycards.concat(arraycards); // Es dupliquen
-		arraycards.sort(function(){return Math.random() - 0.5});
+		this.arraycards = this.arraycards.slice(); //Es fa una copia
+		this.arraycards.sort(function(){return Math.random() - 0.5}); // Array aleatòria
+		this.arraycards = this.arraycards.slice(0, this.cards); // S'agafen els primers ncards 
+		this.arraycards = this.arraycards.concat(this.arraycards); // Es dupliquen
+		this.arraycards.sort(function(){return Math.random() - 0.5});
 
 		this.cameras.main.setBackgroundColor(0xBFFCFF);
-		
+		//cartes mostrades
 		for(let j = 0; j < this.arraycards.length; j++)
 		{
 			
@@ -71,44 +71,50 @@ class GameScene extends Phaser.Scene {
 			}
 				
 		}
-		/*
-		this.add.image(250, 300, arraycards[0]);
-		this.add.image(350, 300, arraycards[1]);
-		this.add.image(450, 300, arraycards[2]);
-		this.add.image(550, 300, arraycards[3]);
-		*/
 		this.cards = this.physics.add.staticGroup();
-		/*
-		this.cards.create(250, 300, 'back');
-		this.cards.create(350, 300, 'back');
-		this.cards.create(450, 300, 'back');
-		this.cards.create(550, 300, 'back');
-		*/
+		//cartes tapades
+		for(let j = 0; j < this.arraycards.length; j++)
+		{
+			
+			if(j < 4)
+			{
+				this.cards.create(250 + 100 * j,300, 'back');
 
-		var timer = this.time.addEvent({ delay: sec, callback: onEvent, callbackScope: this, loop: false });
+			}
+			else
+			{
+				this.cards.create(250 + 100 * (j-4),450, 'back');
+
+			}
+				
+		}
+		//Es mostren les cartes al començament de la partida
 		this.cards.children.iterate((card)=>{
+			card.setInteractive();
 			card.disableBody(true,true);
-			setTimeout(this.desmostrarInicial, sec);
-		});
 
-		function onEvent (){
+		})
+		//Es tornen a tapar
+		setTimeout(() =>{
 			this.cards.children.iterate((card)=>{
 				card.enableBody(false, 0, 0, true, true);
-			});
-		}
+			})
+		},this.temps);
+		
 
 		let i = 0;
 		this.cards.children.iterate((card)=>{
-			card.card_id = arraycards[i];
+			card.card_id = this.arraycards[i];
 			i++;
-			card.setInteractive();
 			card.on('pointerup', () => {
 				card.disableBody(true,true);
 				if (this.firstClick){
 					if (this.firstClick.card_id !== card.card_id){
 						this.score -= this.dificultatlvl;
-						setTimeout(()=>{
-							this.firstClick.enableBody(false, 0, 0, true, true);
+						card.disableBody(true,true);
+						var help = this.firstClick; // variable auxiliar
+						setTimeout(()=>{ //Mostrar cartes 1s al fallar
+							help.enableBody(false, 0, 0, true, true);
 							card.enableBody(false, 0, 0, true, true);
 						},1000);
 						if (this.score <= 0){
