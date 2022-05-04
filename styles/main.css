@@ -7,22 +7,38 @@ input[type=number]{
 }
 
 #title{
-	font-size: 26px;
+	font-size: 48px;
 	line-height: 75px;
+	width: 200;
+
+	background-color: #5266ff;
 }
 
 .menu-object{
 	display:block;
 	margin-left: auto;
 	margin-right: auto;
-	width: 300px;
+	width: 320px;
 	height: 75px;
-	font-size: 16px;
-	margin-top: 10px;
+	font-size: 22px;
+	font-family: sans-serif;
+	margin-top: 20px;
+
+	border-width: 10px;
+	border-radius: 25px;
+	border-color: #3600b5;
+
+	background-color: aquamarine;
+
+}
+
+body{
+	background-color: #5266ff;
 }
 
 p{
 	text-align: center;
+	font-family: sans-serif;
 }
 
 button.menu-object:active{
@@ -32,7 +48,7 @@ button.menu-object:active{
 }
 
 button.menu-object:hover:not(:active){
-	font-size: 22px;
+	font-size: 28px;
 	width: 325px;
 	height: 85px;
 }
